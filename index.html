@@ -431,116 +431,89 @@ Explanation: Fiber-optic cable is the media is being used to transmit the data w
 Explanation: Routers and switches are intermediary devices.`;  // Replace with your actual text
 
         // Split the text into lines
-        let lines = text.split('\n');
-
-        // Initialize an empty array for the questions
-        let questions = [];
-
-        // For each line...
-        lines.forEach(line => {
-            // If the line is a question...
-            if (line.match(/^\d+\./)) {
-                // Add a new question object to the array
-                questions.push({
-                    question: line.slice(line.indexOf('.') + 2),
-                    choices: [],
-                    correctAnswers: [],
-                    incorrect: false
-                });
-            }
-            // If the line is a choice...
-            else if (line.startsWith('•')) {
-                // Get the current question
-                let question = questions[questions.length - 1];
-
-                // Get the choice text
-                let choice = line.slice(2);
-
-                // If the choice is correct...
-                if (choice.endsWith('-')) {
-                    // Remove the "-" from the choice text
-                    choice = choice.slice(0, -1);
-
-                    // Add the choice index to the correct answers
-                    question.correctAnswers.push(question.choices.length);
-                }
-
-                // Add the choice to the choices
-                question.choices.push(choice);
-            }
+let lines = text.split('\n');
+let questions = [];
+lines.forEach(line => {
+    if (line.match(/^\d+\./)) {
+        questions.push({
+            question: line.slice(line.indexOf('.') + 2),
+            choices: [],
+            correctAnswers: [],
+            incorrect: false,
+            answered: false
         });
-
-        // Get the quiz and counter elements
-        let quizElement = document.getElementById('quiz');
-        let counterElement = document.getElementById('counter');
-
-        // Function to display the questions
-        function displayQuestions() {
-            // Clear the quiz element
-            quizElement.innerHTML = '';
-
-            // Reset the counter
-            let incorrectCount = 0;
-
-            // For each question...
-            questions.forEach((question, i) => {
-                // Create a div for the question
-                let div = document.createElement('div');
-
-                // Add the question text
-                div.innerHTML = `<p>${question.question}</p>`;
-
-                // Randomize the order of the choices
-                let choices = question.choices.slice();
-                choices.sort(() => Math.random() - 0.5);
-
-                // For each choice...
-                choices.forEach((choice, j) => {
-                    // Create a button for the choice
-                    let button = document.createElement('button');
-                    button.textContent = choice;
-
-                    // When the button is clicked...
-                    // When the button is clicked...
-// When the button is clicked...
-button.addEventListener('click', () => {
-    // If the choice is correct...
-    if (question.correctAnswers.includes(question.choices.indexOf(choice))) {
-        // Mark the button as correct (green)
-        button.className = 'correct';
-    } else {
-        // Mark the button as incorrect (red)
-        button.className = 'incorrect';
-
-        // Mark the question as incorrect
-        question.incorrect = true;
     }
-
-    // Update the counters
-    let incorrectCount = questions.filter(question => question.incorrect).length;
-    let correctCount = questions.length - incorrectCount;
-    counterElement.innerHTML = `Correct: ${correctCount} / ${questions.length} (${Math.round(correctCount / questions.length * 100)}%) and ${correctCount > 45 ? 100 : Math.round(correctCount / 45 * 100)}% out of 45<br>
-    Incorrect: ${incorrectCount} / ${questions.length} (${Math.round(incorrectCount / questions.length * 100)}%) and ${Math.round(incorrectCount / 45 * 100)}% out of 45 <br> for debugging purposes, better observe "Incorrect".`;
+    else if (line.startsWith('•')) {
+        let question = questions[questions.length - 1];
+        let choice = line.slice(2);
+        if (choice.endsWith('-')) {
+            choice = choice.slice(0, -1);
+            question.correctAnswers.push(question.choices.length);
+        }
+        question.choices.push(choice);
+    }
 });
 
+let quizElement = document.getElementById('quiz');
+let counterElement = document.getElementById('counter');
 
+function displayQuestions() {
+    quizElement.innerHTML = '';
+    let incorrectCount = 0;
+    let correctCount = 0;
+    let answeredCount = 0;
 
-                    // Add the button to the div
-                    div.appendChild(button);
-                });
+    questions.forEach((question, i) => {
+        let div = document.createElement('div');
+        div.innerHTML = `<p>${question.question}</p>`;
+        let choices = question.choices.slice();
+        choices.sort(() => Math.random() - 0.5);
 
-                // Add the div to the quiz element
-                quizElement.appendChild(div);
+        choices.forEach((choice, j) => {
+            let button = document.createElement('button');
+            button.textContent = choice;
+            button.addEventListener('click', () => {
+                if (question.correctAnswers.includes(question.choices.indexOf(choice))) {
+                    button.className = 'correct';
+                    if (!question.answered) {
+                        question.answered = true;
+                        if (!question.incorrect) {
+                            correctCount++;
+                        }
+                    }
+                } else {
+                    button.className = 'incorrect';
+                    question.incorrect = true;
+                    if (!question.answered) {
+                        question.answered = true;
+                    }
+                }
+
+                incorrectCount = questions.filter(question => question.incorrect).length;
+                answeredCount = questions.filter(question => question.answered).length;
+                counterElement.innerHTML = `Answered: ${answeredCount} / ${questions.length} (${Math.round(answeredCount / questions.length * 100)}%) and ${answeredCount > 45 ? 100 : Math.round(answeredCount / 45 * 100)}% out of 45<br>
+                Correct: ${correctCount} / ${answeredCount} (${Math.round(correctCount / answeredCount * 100)}%) and ${correctCount > 45 ? 100 : Math.round(correctCount / 45 * 100)}% out of 45<br>
+                Incorrect: ${incorrectCount} / ${questions.length} (${Math.round(incorrectCount / questions.length * 100)}%) and ${Math.round(incorrectCount / 45 * 100)}% out of 45`;
             });
+
+            div.appendChild(button);
+        });
+
+        quizElement.appendChild(div);
+        if (i === 44) {
+            let separator = document.createElement('hr');
+            separator.textContent = '=======================45 QUESTIONS ====================';
+            quizElement.appendChild(separator);
         }
+    });
+}
 
-        // Display the questions
-        displayQuestions();
+displayQuestions();
 
-        // When the "Randomize Questions Order" button is clicked...
-        document.getElementById('randomize').addEventListener('click', () => {
-            // Randomize the order of the questions
-            questions.sort(() => Math.random() - 0.5);
+document.getElementById('randomize').addEventListener('click', () => {
+    questions.sort(() => Math.random() - 0.5);
+    displayQuestions();
+});
 
             // Display the questions
             displayQuestions();
