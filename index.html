@@ -428,43 +428,43 @@ Explanation: Fiber-optic cable is the media is being used to transmit the data w
 Explanation: Routers and switches are intermediary devices.`;  // Replace with your actual text
 
         // Split the text into lines
-        let lines = text.split('\n');
+let lines = text.split('\n');
 
-        // Initialize an empty array for the questions
-        let questions = [];
+// Initialize an empty array for the questions
+let questions = [];
 
-        // For each line...
-        lines.forEach(line => {
-            // If the line is a question...
-            if (line.match(/^\d+\./)) {
-                // Add a new question object to the array
-                questions.push({
-                    question: line.split('. ')[1],
-                    choices: [],
-                    correctAnswers: []
-                });
-            }
-            // If the line is a choice...
-            else if (line.startsWith('•')) {
-                // Get the current question
-                let question = questions[questions.length - 1];
-
-                // Get the choice text
-                let choice = line.slice(2);
-
-                // If the choice is correct...
-                if (choice.endsWith('-')) {
-                    // Remove the "-" from the choice text
-                    choice = choice.slice(0, -1);
-
-                    // Add the choice index to the correct answers
-                    question.correctAnswers.push(question.choices.length);
-                }
-
-                // Add the choice to the choices
-                question.choices.push(choice);
-            }
+// For each line...
+lines.forEach(line => {
+    // If the line is a question...
+    if (line.match(/^\d+\./)) {
+        // Add a new question object to the array
+        questions.push({
+            question: line.slice(line.indexOf('.') + 2),
+            choices: [],
+            correctAnswers: []
         });
+    }
+    // If the line is a choice...
+    else if (line.startsWith('•')) {
+        // Get the current question
+        let question = questions[questions.length - 1];
+
+        // Get the choice text
+        let choice = line.slice(2);
+
+        // If the choice is correct...
+        if (choice.endsWith('-')) {
+            // Remove the "-" from the choice text
+            choice = choice.slice(0, -1);
+
+            // Add the choice index to the correct answers
+            question.correctAnswers.push(question.choices.length);
+        }
+
+        // Add the choice to the choices
+        question.choices.push(choice);
+    }
+});
 
         // Get the quiz element
         let quizElement = document.getElementById('quiz');
