@@ -475,64 +475,62 @@ Explanation: Routers and switches are intermediary devices.`;  // Replace with y
         let counterElement = document.getElementById('counter');
 
         // Function to display the questions
-        function displayQuestions() {
-            // Clear the quiz element
-            quizElement.innerHTML = '';
+// Function to display the questions
+function displayQuestions() {
+    // Clear the quiz element
+    quizElement.innerHTML = '';
 
-            // Reset the counter
-            let incorrectCount = 0;
+    // Reset the counter
+    let incorrectCount = 0;
+    let correctCount = 0;
 
-            // For each question...
-            questions.forEach((question, i) => {
-                // Create a div for the question
-                let div = document.createElement('div');
+    // For each question...
+    questions.forEach((question, i) => {
+        // Create a div for the question
+        let div = document.createElement('div');
 
-                // Add the question text
-                div.innerHTML = `<p>${question.question}</p>`;
+        // Add the question text
+        div.innerHTML = `<p>${question.question}</p>`;
 
-                // Randomize the order of the choices
-                let choices = question.choices.slice();
-                choices.sort(() => Math.random() - 0.5);
+        // Randomize the order of the choices
+        let choices = question.choices.slice();
+        choices.sort(() => Math.random() - 0.5);
 
-                // For each choice...
-                choices.forEach((choice, j) => {
-                    // Create a button for the choice
-                    let button = document.createElement('button');
-                    button.textContent = choice;
+        // For each choice...
+        choices.forEach((choice, j) => {
+            // Create a button for the choice
+            let button = document.createElement('button');
+            button.textContent = choice;
 
-                    // When the button is clicked...
-                    // When the button is clicked...
-// When the button is clicked...
-button.addEventListener('click', () => {
-    // If the choice is correct...
-    if (question.correctAnswers.includes(question.choices.indexOf(choice))) {
-        // Mark the button as correct (green)
-        button.className = 'correct';
-    } else {
-        // Mark the button as incorrect (red)
-        button.className = 'incorrect';
+            // When the button is clicked...
+            button.addEventListener('click', () => {
+                // If the choice is correct...
+                if (question.correctAnswers.includes(question.choices.indexOf(choice))) {
+                    // Mark the button as correct (green)
+                    button.className = 'correct';
+                } else {
+                    // Mark the button as incorrect (red)
+                    button.className = 'incorrect';
 
-        // Mark the question as incorrect
-        question.incorrect = true;
-    }
+                    // Mark the question as incorrect
+                    question.incorrect = true;
+                }
 
-    // Update the counters
-    let incorrectCount = questions.filter(question => question.incorrect).length;
-    let correctCount = questions.length - incorrectCount;
-    counterElement.innerHTML = `Correct: ${correctCount} / ${questions.length} (${Math.round(correctCount / questions.length * 100)}%) and ${correctCount > 45 ? 100 : Math.round(correctCount / 45 * 100)}% out of 45<br>
-    Incorrect: ${incorrectCount} / ${questions.length} (${Math.round(incorrectCount / questions.length * 100)}%) and ${Math.round(incorrectCount / 45 * 100)}% out of 45 <br> for debugging purposes, better observe "Incorrect".`;
-});
-
-
-
-                    // Add the button to the div
-                    div.appendChild(button);
-                });
-
-                // Add the div to the quiz element
-                quizElement.appendChild(div);
+                // Update the counters
+                incorrectCount = questions.filter(question => question.incorrect).length;
+                correctCount = questions.filter(question => !question.incorrect).length;
+                counterElement.innerHTML = `Correct: ${correctCount} / ${questions.length} (${Math.round(correctCount / questions.length * 100)}%) and ${correctCount > 45 ? 100 : Math.round(correctCount / 45 * 100)}% out of 45<br>
+                Incorrect: ${incorrectCount} / ${questions.length} (${Math.round(incorrectCount / questions.length * 100)}%) and ${Math.round(incorrectCount / 45 * 100)}% out of 45`;
             });
-        }
+
+            // Add the button to the div
+            div.appendChild(button);
+        });
+
+        // Add the div to the quiz element
+        quizElement.appendChild(div);
+    });
+}
 
         // Display the questions
         displayQuestions();
