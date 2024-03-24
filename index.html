@@ -501,23 +501,24 @@ Explanation: Routers and switches are intermediary devices.`;  // Replace with y
                     button.textContent = choice;
 
                     // When the button is clicked...
-                    button.addEventListener('click', () => {
-                        // If the choice is correct...
-                        if (question.correctAnswers.includes(question.choices.indexOf(choice))) {
-                            // Mark the button as correct (green)
-                            button.className = 'correct';
-                        } else {
-                            // Mark the button as incorrect (red)
-                            button.className = 'incorrect';
+                    // When the button is clicked...
+button.addEventListener('click', () => {
+    // If the choice is correct...
+    if (question.correctAnswers.includes(question.choices.indexOf(choice))) {
+        // Mark the button as correct (green)
+        button.className = 'correct';
+    } else {
+        // Mark the button as incorrect (red)
+        button.className = 'incorrect';
 
-                            // Mark the question as incorrect
-                            question.incorrect = true;
-                        }
+        // Mark the question as incorrect
+        question.incorrect = true;
+    }
 
-                        // Update the counter
-                        incorrectCount = questions.filter(question => question.incorrect).length;
-                        counterElement.textContent = `Incorrect: ${incorrectCount} / ${questions.length} (${Math.round(incorrectCount / questions.length * 100)}%)`;
-                    });
+    // Update the counter
+    incorrectCount = questions.filter(question => question.incorrect).length;
+    counterElement.textContent = `Incorrect: ${incorrectCount} / ${questions.length} (${Math.round(incorrectCount / questions.length * 100)}%) and ${Math.round(incorrectCount / 45 * 100)}% out of 45`;
+});
 
                     // Add the button to the div
                     div.appendChild(button);
