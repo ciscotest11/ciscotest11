@@ -520,7 +520,7 @@ button.addEventListener('click', () => {
     let incorrectCount = questions.filter(question => question.incorrect).length;
     let correctCount = questions.length - incorrectCount;
     counterElement.innerHTML = `Correct: ${correctCount} / ${questions.length} (${Math.round(correctCount / questions.length * 100)}%) and ${correctCount > 45 ? 100 : Math.round(correctCount / 45 * 100)}% out of 45<br>
-    Incorrect: ${incorrectCount} / ${questions.length} (${Math.round(incorrectCount / questions.length * 100)}%) and ${Math.round(incorrectCount / 45 * 100)}% out of 45`;
+    Incorrect: ${incorrectCount} / ${questions.length} (${Math.round(incorrectCount / questions.length * 100)}%) and ${Math.round(incorrectCount / 45 * 100)}% out of 45 <br> for debugging purposes, better observe "Incorrect".`;
 });
 
 
